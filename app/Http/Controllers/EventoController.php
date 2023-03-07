@@ -16,15 +16,11 @@ class EventoController extends Controller
 
     //Metodo pagina principal
     public function index(Request $request){
-
         $busca= $request['search'];
- 
         if ($busca) {
             $eventos= Evento::where( "nome_evento", "like", "%$busca%")->get();
-        }else{
-            $eventos= Evento::all();
         }
-        
+        $eventos= Evento::all();
         return view( "welcome",compact("eventos","busca") ); 
     }
 
@@ -84,8 +80,6 @@ class EventoController extends Controller
                     //Retorna Sucesso
                     $msg="Evento Criando com Sucesso...";
                     return Redirect("eventos/create")->with("msg_Sucesso",$msg);
-                    die;
-                    exit;
 
                 }else{
                     goto mensagem_erro;
@@ -116,10 +110,8 @@ class EventoController extends Controller
 
     //Metodo para o Dashboard
     public function dashboard(){
-
         $user= auth()->user();
         $MeusEventos= $user->eventos;
-
         return view("eventos/dashboard", compact("MeusEventos"));
     }
 
@@ -130,18 +122,13 @@ class EventoController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect('/');
-        
-
     }
 
     //Metodo para deletar Evento no DB
     public function destroy($id){
-
         Evento::findOrFail($id)->firstOrFail()->delete();
-
         $msg="Evento excluido com sucesso!";
         return Redirect(route("dashboard"))->with("msg_delete",$msg);
-
     }
 
     //Metodo para deletar Evento no DB
